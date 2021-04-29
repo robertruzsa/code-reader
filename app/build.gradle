@@ -17,9 +17,20 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        release {
+            storeFile file(CODE_READER_RELEASE_STORE_FILE)
+            storePassword CODE_READER_RELEASE_STORE_PASSWORD
+            keyAlias CODE_READER_RELEASE_KEY_ALIAS
+            keyPassword CODE_READER_RELEASE_KEY_PASSWORD
+            v2SigningEnabled true
+        }
+    }
     buildTypes {
         release {
-            minifyEnabled false
+            debuggable false
+            minifyEnabled true
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
