@@ -57,6 +57,10 @@ class CodeReaderView(context: Context, attrs: AttributeSet) : FrameLayout(contex
         val cameraTypeValue = attributes.getInt(R.styleable.CodeReaderView_cameraType, 0)
         cameraType = CameraType.getCameraType(cameraTypeValue)
 
+        binding.toggleCamera.setOnClickListener {
+            toggleCamera()
+        }
+
         attributes.recycle()
     }
 
