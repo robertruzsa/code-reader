@@ -13,7 +13,7 @@ This project implements a custom camera view for barcode scanning.
 #### Listnener
 ```
 binding.codeReaderView.setOnBarcodeScannedListener(
-    barcodeType = Barcode.QR_CODE,
+    barcodeType = Barcode.FORMAT_QR_CODE,
     action = { barcodeData ->
         // Handle the scanned barcode data here
     }
