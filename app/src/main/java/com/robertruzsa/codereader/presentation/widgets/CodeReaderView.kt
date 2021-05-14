@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import android.widget.Toast
-import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
@@ -19,8 +18,11 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
+import com.robertruzsa.codereader.R
 import com.robertruzsa.codereader.databinding.ViewCodeReaderBinding
 import com.robertruzsa.codereader.extensions.TAG
+import com.robertruzsa.codereader.model.BarcodeType
+import com.robertruzsa.codereader.model.CameraType
 import com.robertruzsa.codereader.presentation.screens.codereader.BarcodeAnalyzer
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -32,14 +34,30 @@ class CodeReaderView(context: Context, attrs: AttributeSet) : FrameLayout(contex
 
     private var cameraProvider: ProcessCameraProvider? = null
     private var cameraExecutor: ExecutorService = Executors.newSingleThreadExecutor()
-    
+
     private var onBarcodeScanned: (String) -> Unit = {}
 
+    lateinit var barcodeType: BarcodeType
+    lateinit var cameraType: CameraType
+
     init {
+        init(context, attrs)
         checkCameraPermission(
             onPermissionGranted = ::startCamera,
             onPermissionDenied = ::showPermissionDeniedToast
         )
+    }
+
+    private fun init(context: Context, attrs: AttributeSet?) {
+        val attributes = context.obtainStyledAttributes(attrs, R.styleable.CodeReaderView)
+
+        val barcodeTypeValue = attributes.getInt(R.styleable.CodeReaderView_barcodeType, 0)
+        barcodeType = BarcodeType.getBarcodeType(barcodeTypeValue)
+
+        val cameraTypeValue = attributes.getInt(R.styleable.CodeReaderView_cameraType, 0)
+        cameraType = CameraType.getCameraType(cameraTypeValue)
+
+        attributes.recycle()
     }
 
     fun setOnBarcodeScannedListener(action: (String) -> Unit) {
@@ -48,35 +66,40 @@ class CodeReaderView(context: Context, attrs: AttributeSet) : FrameLayout(contex
 
     fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
-        cameraProviderFuture.addListener({
-            cameraProvider = cameraProviderFuture.get()
+        cameraProviderFuture.addListener(
+            {
+                cameraProvider = cameraProviderFuture.get()
 
-            val preview = Preview.Builder().build()
-                .also {
-                    it.setSurfaceProvider(binding.previewView.surfaceProvider)
+                val preview = Preview.Builder().build()
+                    .also {
+                        it.setSurfaceProvider(binding.previewView.surfaceProvider)
+                    }
+
+                val imageAnalyzer = ImageAnalysis.Builder().build()
+                    .also {
+                        it.setAnalyzer(
+                            cameraExecutor,
+                            BarcodeAnalyzer(barcodeType) { data ->
+                                onBarcodeScanned.invoke(data)
+                                stopCamera()
+                            }
+                        )
+                    }
+
+                try {
+                    stopCamera()
+                    cameraProvider?.bindToLifecycle(
+                        context as LifecycleOwner,
+                        CameraType.getCameraSelector(cameraType),
+                        preview,
+                        imageAnalyzer
+                    )
+                } catch (exc: Exception) {
+                    Log.e(this.TAG, "Use case binding failed", exc)
                 }
-
-            val imageAnalyzer = ImageAnalysis.Builder().build()
-                .also {
-                    it.setAnalyzer(cameraExecutor, BarcodeAnalyzer { data ->
-                        onBarcodeScanned.invoke(data)
-                        stopCamera()
-                    })
-                }
-
-            try {
-                stopCamera()
-                cameraProvider?.bindToLifecycle(
-                    context as LifecycleOwner,
-                    CameraSelector.DEFAULT_BACK_CAMERA,
-                    preview,
-                    imageAnalyzer
-                )
-            } catch (exc: Exception) {
-                Log.e(this.TAG, "Use case binding failed", exc)
-            }
-
-        }, ContextCompat.getMainExecutor(context))
+            },
+            ContextCompat.getMainExecutor(context)
+        )
     }
 
     fun stopCamera() {
@@ -103,7 +126,6 @@ class CodeReaderView(context: Context, attrs: AttributeSet) : FrameLayout(contex
                 ) {
                     token?.continuePermissionRequest()
                 }
-
             }).check()
     }
 

@@ -4,11 +4,16 @@ import android.annotation.SuppressLint
 import android.util.Log
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
+import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
 import com.robertruzsa.codereader.extensions.TAG
+import com.robertruzsa.codereader.model.BarcodeType
 
-class BarcodeAnalyzer(private val barcodeListener: (String) -> Unit ): ImageAnalysis.Analyzer {
+class BarcodeAnalyzer(
+    private val barcodeType: BarcodeType,
+    private val barcodeListener: (String) -> Unit
+) : ImageAnalysis.Analyzer {
 
     override fun analyze(image: ImageProxy) {
         processImageProxy(image)
@@ -16,13 +21,16 @@ class BarcodeAnalyzer(private val barcodeListener: (String) -> Unit ): ImageAnal
 
     @SuppressLint("UnsafeOptInUsageError")
     private fun processImageProxy(imageProxy: ImageProxy) {
-        val inputImage = InputImage.fromMediaImage(imageProxy.image ?: return, imageProxy.imageInfo.rotationDegrees)
+        val inputImage = InputImage.fromMediaImage(
+            imageProxy.image ?: return,
+            imageProxy.imageInfo.rotationDegrees
+        )
 
-        // BarcodeScannerOptions.Builder()
-        //     .setBarcodeFormats(Barcode.FORMAT_QR_CODE)
-        //     .build();
+        val scannerOptions = BarcodeScannerOptions.Builder()
+            .setBarcodeFormats(BarcodeType.getBarcodeFormatInt(barcodeType))
+            .build()
 
-        BarcodeScanning.getClient()
+        BarcodeScanning.getClient(scannerOptions)
             .process(inputImage)
             .addOnSuccessListener { barcodes ->
                 barcodes.forEach {
@@ -35,5 +43,4 @@ class BarcodeAnalyzer(private val barcodeListener: (String) -> Unit ): ImageAnal
                 imageProxy.close()
             }
     }
-
 }
