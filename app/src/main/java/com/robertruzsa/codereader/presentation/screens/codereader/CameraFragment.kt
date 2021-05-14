@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.google.android.libraries.barhopper.Barcode
 import com.robertruzsa.codereader.databinding.FragmentCameraBinding
 
 class CameraFragment : Fragment() {
@@ -25,13 +26,18 @@ class CameraFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.codeReaderView.setOnBarcodeScannedListener { barcodeData ->
-            Toast.makeText(requireContext(), barcodeData, Toast.LENGTH_SHORT).show()
-        }
+        binding.codeReaderView.setOnBarcodeScannedListener(
+            barcodeType = Barcode.QR_CODE,
+            action = ::handleBarcode
+        )
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun handleBarcode(barcodeData: String) {
+        Toast.makeText(activity, barcodeData, Toast.LENGTH_SHORT).show()
     }
 }

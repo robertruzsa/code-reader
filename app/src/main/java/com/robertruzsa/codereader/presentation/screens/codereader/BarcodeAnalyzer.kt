@@ -8,10 +8,9 @@ import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
 import com.robertruzsa.codereader.extensions.TAG
-import com.robertruzsa.codereader.model.BarcodeType
 
 class BarcodeAnalyzer(
-    private val barcodeType: BarcodeType,
+    private val barcodeType: Int,
     private val barcodeListener: (String) -> Unit
 ) : ImageAnalysis.Analyzer {
 
@@ -27,7 +26,7 @@ class BarcodeAnalyzer(
         )
 
         val scannerOptions = BarcodeScannerOptions.Builder()
-            .setBarcodeFormats(BarcodeType.getBarcodeFormatInt(barcodeType))
+            .setBarcodeFormats(barcodeType)
             .build()
 
         BarcodeScanning.getClient(scannerOptions)

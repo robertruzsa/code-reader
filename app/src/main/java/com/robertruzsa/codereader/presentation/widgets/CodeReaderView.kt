@@ -12,6 +12,7 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
+import com.google.mlkit.vision.barcode.Barcode
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionDeniedResponse
@@ -21,7 +22,6 @@ import com.karumi.dexter.listener.single.PermissionListener
 import com.robertruzsa.codereader.R
 import com.robertruzsa.codereader.databinding.ViewCodeReaderBinding
 import com.robertruzsa.codereader.extensions.TAG
-import com.robertruzsa.codereader.model.BarcodeType
 import com.robertruzsa.codereader.model.CameraType
 import com.robertruzsa.codereader.presentation.screens.codereader.BarcodeAnalyzer
 import java.util.concurrent.ExecutorService
@@ -37,7 +37,7 @@ class CodeReaderView(context: Context, attrs: AttributeSet) : FrameLayout(contex
 
     private var onBarcodeScanned: (String) -> Unit = {}
 
-    lateinit var barcodeType: BarcodeType
+    private var barcodeType: Int = Barcode.FORMAT_ALL_FORMATS
     lateinit var cameraType: CameraType
 
     init {
@@ -51,9 +51,6 @@ class CodeReaderView(context: Context, attrs: AttributeSet) : FrameLayout(contex
     private fun init(context: Context, attrs: AttributeSet?) {
         val attributes = context.obtainStyledAttributes(attrs, R.styleable.CodeReaderView)
 
-        val barcodeTypeValue = attributes.getInt(R.styleable.CodeReaderView_barcodeType, 0)
-        barcodeType = BarcodeType.getBarcodeType(barcodeTypeValue)
-
         val cameraTypeValue = attributes.getInt(R.styleable.CodeReaderView_cameraType, 0)
         cameraType = CameraType.getCameraType(cameraTypeValue)
 
@@ -64,7 +61,11 @@ class CodeReaderView(context: Context, attrs: AttributeSet) : FrameLayout(contex
         attributes.recycle()
     }
 
-    fun setOnBarcodeScannedListener(action: (String) -> Unit) {
+    fun setOnBarcodeScannedListener(
+        barcodeType: Int,
+        action: (String) -> Unit
+    ) {
+        this.barcodeType = barcodeType
         onBarcodeScanned = action
     }
 

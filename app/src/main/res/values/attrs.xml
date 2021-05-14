@@ -1,19 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <attr name="barcodeType" format="enum">
-        <enum name="any" value ="0" />
-        <enum name="qr" value="1" />
-        <enum name="aztec" value="2" />
-    </attr>
-
     <attr name="cameraType" format="enum">
         <enum name="back" value="0" />
         <enum name="front" value="1" />
     </attr>
 
     <declare-styleable name="CodeReaderView">
-        <attr name="barcodeType" />
         <attr name="cameraType" />
     </declare-styleable>
 
