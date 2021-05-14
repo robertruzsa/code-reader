@@ -28,6 +28,10 @@ class CameraFragment : Fragment() {
         binding.codeReaderView.setOnBarcodeScannedListener { barcodeData ->
             Toast.makeText(requireContext(), barcodeData, Toast.LENGTH_SHORT).show()
         }
+
+        binding.switchCameraButton.setOnClickListener {
+            binding.codeReaderView.toggleCamera()
+        }
     }
 
     override fun onDestroyView() {

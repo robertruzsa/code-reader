@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Code Reader</string>
+    <string name="toggle_camera">Toggle camera</string>
 </resources>

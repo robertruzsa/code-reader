@@ -141,4 +141,12 @@ class CodeReaderView(context: Context, attrs: AttributeSet) : FrameLayout(contex
         super.onDetachedFromWindow()
         cameraExecutor.shutdown()
     }
+
+    fun toggleCamera() {
+        cameraType = when (cameraType) {
+            CameraType.DEFAULT_BACK_CAMERA -> CameraType.DEFAULT_FRONT_CAMERA
+            CameraType.DEFAULT_FRONT_CAMERA -> CameraType.DEFAULT_BACK_CAMERA
+        }
+        startCamera()
+    }
 }
