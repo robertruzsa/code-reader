@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="cameraType" format="enum">
+        <enum name="back" value="0" />
+        <enum name="front" value="1" />
+    </attr>
+
+    <declare-styleable name="CodeReaderView">
+        <attr name="cameraType" />
+    </declare-styleable>
+
+</resources>

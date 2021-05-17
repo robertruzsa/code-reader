@@ -1,4 +1,4 @@
-package com.robertruzsa.codereader.presentation.screens.codereader
+package com.robertruzsa.codereaderview
 
 import android.annotation.SuppressLint
 import android.util.Log
@@ -7,10 +7,9 @@ import androidx.camera.core.ImageProxy
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
-import com.robertruzsa.codereader.extensions.TAG
 
 class BarcodeAnalyzer(
-    private val barcodeType: Int,
+    private val barcodeFormat: BarcodeFormat,
     private val barcodeListener: (String) -> Unit
 ) : ImageAnalysis.Analyzer {
 
@@ -26,7 +25,7 @@ class BarcodeAnalyzer(
         )
 
         val scannerOptions = BarcodeScannerOptions.Builder()
-            .setBarcodeFormats(barcodeType)
+            .setBarcodeFormats(barcodeFormat.value)
             .build()
 
         BarcodeScanning.getClient(scannerOptions)
