@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.google.mlkit.vision.barcode.Barcode
 import com.robertruzsa.codereader.databinding.FragmentCameraBinding
+import com.robertruzsa.codereaderview.BarcodeFormat
 
 class CameraFragment : Fragment() {
 
@@ -27,7 +27,7 @@ class CameraFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.codeReaderView.setOnBarcodeScannedListener(
-            barcodeType = Barcode.FORMAT_QR_CODE,
+            barcodeFormat = BarcodeFormat.QR_CODE,
             action = ::handleBarcode
         )
     }
