@@ -10,7 +10,7 @@ This project implements a custom camera view for barcode scanning.
     app:cameraType="front" />
 ```
 ### Kotlin
-#### Listnener
+#### Listener
 ```
 binding.codeReaderView.setOnBarcodeScannedListener(
     barcodeType = Barcode.FORMAT_QR_CODE,
@@ -24,7 +24,7 @@ binding.codeReaderView.setOnBarcodeScannedListener(
 binding.codeReaderView.cameraType = CameraType.DEFAULT_FRONT_CAMERA
 binding.codeReaderView.cameraType = CameraType.DEFAULT_BACK_CAMERA
 ```
-## Suppered barcode formats
+## Supported barcode formats
 - Code 128 (FORMAT_CODE_128)
 - Code 39 (FORMAT_CODE_39)
 - Code 93 (FORMAT_CODE_93)
