@@ -2,6 +2,7 @@ package com.robertruzsa.codereaderview
 
 import android.Manifest
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
@@ -148,5 +149,16 @@ class CodeReaderView(context: Context, attrs: AttributeSet) : FrameLayout(contex
             CameraType.FRONT_CAMERA -> CameraType.BACK_CAMERA
         }
         startCamera()
+    }
+
+    override fun onSaveInstanceState(): Parcelable {
+        return CodeReaderViewSavedState(cameraType, super.onSaveInstanceState())
+    }
+
+    override fun onRestoreInstanceState(state: Parcelable?) {
+        (state as? CodeReaderViewSavedState)?.let { savedState ->
+            super.onRestoreInstanceState(savedState.superState)
+            cameraType = savedState.cameraType
+        } ?: super.onRestoreInstanceState(state)
     }
 }
