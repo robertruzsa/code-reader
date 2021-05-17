@@ -27,7 +27,7 @@ class CameraFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.codeReaderView.setOnBarcodeScannedListener(
-            barcodeFormat = BarcodeFormat.AZTEC,
+            barcodeFormat = BarcodeFormat.ALL_FORMATS,
             action = ::handleBarcode
         )
     }
