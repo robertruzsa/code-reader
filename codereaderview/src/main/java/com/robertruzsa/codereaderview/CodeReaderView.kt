@@ -2,6 +2,7 @@ package com.robertruzsa.codereaderview
 
 import android.Manifest
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.os.Parcelable
 import android.util.AttributeSet
 import android.util.Log
@@ -36,6 +37,25 @@ class CodeReaderView(context: Context, attrs: AttributeSet) : FrameLayout(contex
     private var barcodeFormat: BarcodeFormat = BarcodeFormat.ALL_FORMATS
     lateinit var cameraType: CameraType
 
+    var isFlipCameraButtonVisible = false
+        set(value) {
+            field = value
+            binding.toggleCamera.visibleIf(value)
+        }
+
+    var flipCameraDrawable: Drawable? = null
+        set(value) {
+            field = value
+            binding.toggleCamera.setImageDrawable(value)
+            isFlipCameraButtonVisible = value != null
+        }
+
+    var flipCameraDrawablePadding: Int = 0
+        set(value) {
+            field = value
+            binding.toggleCamera.setPadding(value, value, value, value)
+        }
+
     init {
         init(context, attrs)
         checkCameraPermission(
@@ -50,8 +70,23 @@ class CodeReaderView(context: Context, attrs: AttributeSet) : FrameLayout(contex
         val cameraTypeValue = attributes.getInt(R.styleable.CodeReaderView_cameraType, 0)
         cameraType = CameraType.getCameraType(cameraTypeValue)
 
+        isFlipCameraButtonVisible =
+            attributes.getBoolean(R.styleable.CodeReaderView_isFlipCameraButtonVisible, false)
+
         binding.toggleCamera.setOnClickListener {
             toggleCamera()
+        }
+
+        attributes.getDrawable(R.styleable.CodeReaderView_flipCameraDrawable)?.let { drawable ->
+            flipCameraDrawable = drawable
+        }
+
+        val flipCameraDrawablePadding = attributes.getDimensionPixelSize(
+            R.styleable.CodeReaderView_flipCameraDrawablePadding,
+            -1
+        )
+        if (flipCameraDrawablePadding != -1) {
+            this.flipCameraDrawablePadding = flipCameraDrawablePadding
         }
 
         attributes.recycle()

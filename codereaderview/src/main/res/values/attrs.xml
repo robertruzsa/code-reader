@@ -8,6 +8,9 @@
 
     <declare-styleable name="CodeReaderView">
         <attr name="cameraType" />
+        <attr name="isFlipCameraButtonVisible" format="boolean" />
+        <attr name="flipCameraDrawable" format="reference" />
+        <attr name="flipCameraDrawablePadding" format="dimension" />
     </declare-styleable>
 
 </resources>
