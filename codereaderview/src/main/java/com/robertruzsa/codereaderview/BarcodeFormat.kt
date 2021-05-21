@@ -1,7 +1,9 @@
 package com.robertruzsa.codereaderview
 
+import androidx.annotation.Keep
 import com.google.mlkit.vision.barcode.Barcode
 
+@Keep
 enum class BarcodeFormat(val value: Int) {
     UNKNOWN(Barcode.FORMAT_UNKNOWN),
     ALL_FORMATS(Barcode.FORMAT_ALL_FORMATS),
