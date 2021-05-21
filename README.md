@@ -1,13 +1,28 @@
 # CodeReaderView
 This project implements a custom camera view for barcode scanning.
+## Setup
+### Dependency
+To include __CodeReaderView__ in your project, add the following to your `app` level `build.gradle` file.
+```
+dependencies {
+    implementation 'com.github.robertruzsa:code-reader:1.1'
+}
+```
+### Permission
+The following permission is required in your `AndroidManfiest.xml`.
+```
+<uses-permission android:name="android.permission.CAMERA" />
+```
 ## Usage
 ### XML
 ```
-<com.robertruzsa.codereader.presentation.widgets.CodeReaderView
-    android:id="@+id/code_reader_view"
-    android:layout_width="match_parent"
-    android:layout_height="300dp"
-    app:cameraType="front" />
+<com.robertruzsa.codereaderview.CodeReaderView
+        android:id="@+id/codeReaderView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:cameraType="back"
+        app:flipCameraDrawable="@drawable/ic_flip_camera"
+        app:flipCameraDrawablePadding="16dp" />
 ```
 ### Kotlin
 #### Listener
