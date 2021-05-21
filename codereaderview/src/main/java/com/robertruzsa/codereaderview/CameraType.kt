@@ -1,7 +1,9 @@
 package com.robertruzsa.codereaderview
 
+import androidx.annotation.Keep
 import androidx.camera.core.CameraSelector
 
+@Keep
 enum class CameraType(val value: Int) {
     BACK_CAMERA(0),
     FRONT_CAMERA(1);

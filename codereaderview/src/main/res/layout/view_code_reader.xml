@@ -12,9 +12,9 @@
 
     <ImageView
         android:id="@+id/toggle_camera"
-        android:layout_margin="16dp"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
         android:src="@drawable/ic_flip_camera"
         app:layout_constraintBottom_toBottomOf="@+id/preview_view"
         app:layout_constraintEnd_toEndOf="parent" />
